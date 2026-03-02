@@ -6,8 +6,7 @@ import { Pack, Item } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useToast } from '@/hooks/use-toast'
@@ -46,6 +45,7 @@ export default function PacksPage() {
         setLoading(false)
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => { fetchData() }, [])
 
     const openAdd = () => { setEditPack(null); setName(''); setDescription(''); setPackItems([]); setOpen(true) }
@@ -156,7 +156,7 @@ export default function PacksPage() {
                             ) : filteredPacks.map(pack => (
                                 <TableRow key={pack.id}>
                                     <TableCell className="font-medium">{pack.name}</TableCell>
-                                    <TableCell className="text-slate-500">{(pack.pack_items as any)?.length || 0} items</TableCell>
+                                    <TableCell className="text-slate-500">{(pack.pack_items as Record<string, any>[])?.length || 0} items</TableCell>
                                     <TableCell>{formatCurrency(pack.total_cost)}</TableCell>
                                     <TableCell className="font-semibold">{formatCurrency(pack.total_selling_price)}</TableCell>
                                     <TableCell>

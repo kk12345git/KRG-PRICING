@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast'
 import { Plus, Pencil, Trash2, Search, Building2 } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 
-const EMPTY = { name: '', address: '', contact_person: '', phone: '', pricing_type: 'standard' as const, credit_period: '30' }
+const EMPTY = { name: '', address: '', contact_person: '', phone: '', pricing_type: 'standard' as 'standard' | 'custom', credit_period: '30' }
 
 export default function HospitalsPage() {
     const supabase = createClient()
@@ -35,6 +35,7 @@ export default function HospitalsPage() {
         setHospitals(data || [])
         setLoading(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => { fetchHospitals() }, [])
 
     const openAdd = () => { setEditItem(null); setForm(EMPTY); setOpen(true) }
@@ -134,7 +135,7 @@ export default function HospitalsPage() {
                         <div className="space-y-2"><Label>Phone</Label><Input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></div>
                         <div className="space-y-2">
                             <Label>Pricing Type</Label>
-                            <Select value={form.pricing_type} onValueChange={v => setForm({ ...form, pricing_type: v as any })}>
+                            <Select value={form.pricing_type} onValueChange={v => setForm({ ...form, pricing_type: v as 'standard' | 'custom' })}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="standard">Standard</SelectItem>

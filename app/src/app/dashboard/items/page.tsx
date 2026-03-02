@@ -16,8 +16,8 @@ import { Plus, Pencil, Trash2, Search, Package } from 'lucide-react'
 import { formatCurrency, calculateMargin, generateSKU } from '@/lib/utils'
 
 const EMPTY_FORM = {
-    name: '', sku: '', category_id: '', purchase_price: '', selling_price: '',
-    gst_percent: '12', vendor: '', status: 'active' as const,
+    name: '', sku: '', category_id: '', purchase_price: '0', selling_price: '0',
+    gst_percent: '12', vendor: '', status: 'active' as 'active' | 'inactive',
 }
 
 export default function ItemsPage() {
@@ -48,6 +48,7 @@ export default function ItemsPage() {
         setLoading(false)
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => { fetchData() }, [])
 
     const openAdd = () => { setEditItem(null); setForm(EMPTY_FORM); setOpen(true) }
@@ -230,7 +231,7 @@ export default function ItemsPage() {
                         </div>
                         <div className="space-y-2">
                             <Label>Status</Label>
-                            <Select value={form.status} onValueChange={v => setForm({ ...form, status: v as any })}>
+                            <Select value={form.status} onValueChange={v => setForm({ ...form, status: v as 'active' | 'inactive' })}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="active">Active</SelectItem>
