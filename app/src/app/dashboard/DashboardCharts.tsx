@@ -33,7 +33,7 @@ export default function DashboardCharts({ topItems, recentQuotations }: Props) {
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                                 <YAxis tick={{ fontSize: 11 }} tickFormatter={v => `₹${v}`} />
-                                <Tooltip formatter={(v: number) => [formatCurrency(v), 'Price']} />
+                                <Tooltip formatter={(v: number | string | Array<number | string> | undefined) => [formatCurrency(Number(v || 0)), 'Price']} />
                                 <Bar dataKey="price" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
@@ -54,7 +54,7 @@ export default function DashboardCharts({ topItems, recentQuotations }: Props) {
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                                 <YAxis tick={{ fontSize: 11 }} tickFormatter={v => `₹${v / 1000}k`} />
-                                <Tooltip formatter={(v: number) => [formatCurrency(v), 'Grand Total']} />
+                                <Tooltip formatter={(v: number | string | Array<number | string> | undefined) => [formatCurrency(Number(v || 0)), 'Grand Total']} />
                                 <Bar dataKey="total" fill="#10b981" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
