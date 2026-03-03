@@ -54,7 +54,7 @@ export default function PacksPage() {
         setEditPack(pack)
         setName(pack.name)
         setDescription(pack.description || '')
-        const pis = (pack.pack_items || []).filter((pi: any) => pi.item).map((pi: any) => ({ item: pi.item, quantity: pi.quantity }))
+        const pis = (pack.pack_items || []).filter((pi: { item?: Item }) => pi.item).map((pi: { item: Item, quantity: number }) => ({ item: pi.item, quantity: pi.quantity }))
         setPackItems(pis)
         setOpen(true)
     }
@@ -63,7 +63,7 @@ export default function PacksPage() {
         setEditPack(null)
         setName(pack.name + ' (Copy)')
         setDescription(pack.description || '')
-        const pis = (pack.pack_items || []).filter((pi: any) => pi.item).map((pi: any) => ({ item: pi.item, quantity: pi.quantity }))
+        const pis = (pack.pack_items || []).filter((pi: { item?: Item }) => pi.item).map((pi: { item: Item, quantity: number }) => ({ item: pi.item, quantity: pi.quantity }))
         setPackItems(pis)
         setOpen(true)
     }
@@ -156,7 +156,7 @@ export default function PacksPage() {
                             ) : filteredPacks.map(pack => (
                                 <TableRow key={pack.id}>
                                     <TableCell className="font-medium">{pack.name}</TableCell>
-                                    <TableCell className="text-slate-500">{(pack.pack_items as Record<string, any>[])?.length || 0} items</TableCell>
+                                    <TableCell className="text-slate-500">{(pack.pack_items as unknown[])?.length || 0} items</TableCell>
                                     <TableCell>{formatCurrency(pack.total_cost)}</TableCell>
                                     <TableCell className="font-semibold">{formatCurrency(pack.total_selling_price)}</TableCell>
                                     <TableCell>

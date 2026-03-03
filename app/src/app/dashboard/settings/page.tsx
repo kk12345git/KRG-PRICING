@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast'
 import { Plus, Pencil, UserCog, Shield } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 
-const ROLE_COLORS: Record<string, any> = { admin: 'destructive', sales: 'info', accountant: 'success' }
+const ROLE_COLORS: Record<string, 'destructive' | 'info' | 'success' | 'secondary' | 'default'> = { admin: 'destructive', sales: 'info', accountant: 'success' }
 
 export default function SettingsPage() {
     const supabase = createClient()
@@ -35,6 +35,7 @@ export default function SettingsPage() {
         setUsers(data || [])
         setLoading(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => { fetchUsers() }, [])
 
     const openAdd = () => { setEditUser(null); setFullName(''); setEmail(''); setPassword(''); setRole('sales'); setOpen(true) }
@@ -141,7 +142,7 @@ export default function SettingsPage() {
                         )}
                         <div className="space-y-2">
                             <Label>Role</Label>
-                            <Select value={role} onValueChange={v => setRole(v as any)}>
+                            <Select value={role} onValueChange={v => setRole(v as 'admin' | 'sales' | 'accountant')}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="admin">Admin</SelectItem>

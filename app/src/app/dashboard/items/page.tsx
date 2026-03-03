@@ -153,7 +153,7 @@ export default function ItemsPage() {
                                 <TableRow key={item.id}>
                                     <TableCell className="font-medium text-slate-800">{item.name}</TableCell>
                                     <TableCell className="text-slate-500 font-mono text-xs">{item.sku}</TableCell>
-                                    <TableCell>{(item.category as any)?.name || '—'}</TableCell>
+                                    <TableCell>{(item.category as { name: string })?.name || '—'}</TableCell>
                                     <TableCell>{formatCurrency(item.purchase_price)}</TableCell>
                                     <TableCell className="font-semibold">{formatCurrency(item.selling_price)}</TableCell>
                                     <TableCell>{item.gst_percent}%</TableCell>

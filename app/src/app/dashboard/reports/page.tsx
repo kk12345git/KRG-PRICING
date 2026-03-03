@@ -11,10 +11,10 @@ const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444']
 
 export default function ReportsPage() {
     const supabase = createClient()
-    const [topItems, setTopItems] = useState<any[]>([])
-    const [topPacks, setTopPacks] = useState<any[]>([])
-    const [quotationTrend, setQuotationTrend] = useState<any[]>([])
-    const [statusDist, setStatusDist] = useState<any[]>([])
+    const [topItems, setTopItems] = useState<{ name: string; margin: number; price: number }[]>([])
+    const [topPacks, setTopPacks] = useState<{ name: string; margin: number; price: number }[]>([])
+    const [quotationTrend, setQuotationTrend] = useState<{ month: string; total: number }[]>([])
+    const [statusDist, setStatusDist] = useState<{ name: string; value: number }[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -43,6 +43,7 @@ export default function ReportsPage() {
 
             setLoading(false)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         load()
     }, [])
 
@@ -67,7 +68,7 @@ export default function ReportsPage() {
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                 <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => `${v}%`} />
                                 <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} width={100} />
-                                <Tooltip formatter={(v: number) => [`${v}%`, 'Margin']} />
+                                <Tooltip formatter={(v: number | string | Array<number | string>) => [`${v}%`, 'Margin']} />
                                 <Bar dataKey="margin" fill="#3b82f6" radius={[0, 4, 4, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
@@ -88,7 +89,7 @@ export default function ReportsPage() {
                                     <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                     <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={v => `${v}%`} />
                                     <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} width={100} />
-                                    <Tooltip formatter={(v: number) => [`${v}%`, 'Margin']} />
+                                    <Tooltip formatter={(v: number | string | Array<number | string>) => [`${v}%`, 'Margin']} />
                                     <Bar dataKey="margin" fill="#10b981" radius={[0, 4, 4, 0]} />
                                 </BarChart>
                             </ResponsiveContainer>
@@ -110,7 +111,7 @@ export default function ReportsPage() {
                                     <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                     <XAxis dataKey="month" tick={{ fontSize: 11 }} />
                                     <YAxis tick={{ fontSize: 11 }} tickFormatter={v => `₹${v / 1000}k`} />
-                                    <Tooltip formatter={(v: number) => [formatCurrency(v), 'Revenue']} />
+                                    <Tooltip formatter={(v: number | string | Array<number | string>) => [formatCurrency(Number(v)), 'Revenue']} />
                                     <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4 }} />
                                 </LineChart>
                             </ResponsiveContainer>
@@ -129,7 +130,7 @@ export default function ReportsPage() {
                         ) : (
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
-                                    <Pie data={statusDist} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                                    <Pie data={statusDist} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}>
                                         {statusDist.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                                     </Pie>
                                     <Tooltip />

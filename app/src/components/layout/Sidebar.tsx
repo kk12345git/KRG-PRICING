@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
     LayoutDashboard, Package, Boxes, Building2, FileText,
-    BarChart3, Settings, LogOut, ChevronLeft, Menu, Stethoscope
+    BarChart3, Settings, LogOut, ChevronLeft, Stethoscope
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'

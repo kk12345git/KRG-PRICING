@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Package, Boxes, Building2, FileText, TrendingUp, IndianRupee } from 'lucide-react'
+import { Package, Boxes, Building2, FileText } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import DashboardCharts from './DashboardCharts'
 
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
                 <CardContent>
                     {recentQuotations && recentQuotations.length > 0 ? (
                         <div className="space-y-2">
-                            {recentQuotations.map((q: any) => (
+                            {recentQuotations.map((q: { id: string; status: string; created_at: string; grand_total: number; hospitals?: { name: string } | null }) => (
                                 <div key={q.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-slate-50">
                                     <div>
                                         <p className="text-sm font-medium text-slate-700">{q.hospitals?.name || 'N/A'}</p>

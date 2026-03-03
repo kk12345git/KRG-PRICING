@@ -6,14 +6,14 @@ import { Quotation, Hospital, Item, Pack } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
+
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import { Plus, Search, FileText, Printer, Download, Copy, Trash2, X } from 'lucide-react'
+import { Plus, Search, FileText, Printer, Download, Trash2, X } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 
 interface LineItem { type: 'item' | 'pack'; id: string; name: string; unit_price: number; gst_percent: number; quantity: number }
@@ -34,7 +34,7 @@ export default function QuotationsPage() {
     const [productSearch, setProductSearch] = useState('')
     const [saving, setSaving] = useState(false)
     const [deleteId, setDeleteId] = useState<string | null>(null)
-    const [viewQuotation, setViewQuotation] = useState<Quotation | null>(null)
+
 
     const subtotal = lineItems.reduce((s, li) => s + li.unit_price * li.quantity, 0)
     const gstTotal = lineItems.reduce((s, li) => s + (li.unit_price * li.quantity * li.gst_percent / 100), 0)
@@ -53,6 +53,7 @@ export default function QuotationsPage() {
         setPacks(p || [])
         setLoading(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => { fetchData() }, [])
 
     const addProduct = (type: 'item' | 'pack', id: string, name: string, price: number, gst: number) => {
@@ -135,10 +136,10 @@ export default function QuotationsPage() {
         doc.setFontSize(10)
         doc.text('To:', 14, 48)
         doc.setFont('helvetica', 'bold')
-        doc.text((q.hospital as any)?.name || 'N/A', 24, 48)
+        doc.text((q.hospital as { name: string })?.name || 'N/A', 24, 48)
         doc.setFont('helvetica', 'normal')
 
-        const tableData = (qItems || []).map((qi: any) => [
+        const tableData = (qItems || []).map((qi: { items?: { name: string }; packs?: { name: string }; quantity: number; unit_price: number; gst_percent: number; total_price: number }) => [
             qi.items?.name || qi.packs?.name || 'N/A',
             qi.quantity,
             `Rs. ${qi.unit_price.toFixed(2)}`,
@@ -154,7 +155,7 @@ export default function QuotationsPage() {
             headStyles: { fillColor: [30, 64, 175], textColor: 255 },
         })
 
-        const finalY = (doc as any).lastAutoTable.finalY + 10
+        const finalY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10
         doc.setFontSize(10)
         doc.text(`Subtotal:    Rs. ${q.subtotal.toFixed(2)}`, 130, finalY)
         doc.text(`GST Total:  Rs. ${q.gst_total.toFixed(2)}`, 130, finalY + 7)
@@ -171,14 +172,14 @@ export default function QuotationsPage() {
         toast({ title: 'PDF downloaded!' })
     }
 
-    const statusVariant: any = { draft: 'secondary', sent: 'info', accepted: 'success', rejected: 'destructive' }
+    const statusVariant: Record<string, 'secondary' | 'info' | 'success' | 'destructive' | 'default'> = { draft: 'secondary', sent: 'info', accepted: 'success', rejected: 'destructive' }
 
     const allProducts = [
         ...items.map(i => ({ type: 'item' as const, id: i.id, name: i.name, price: i.selling_price, gst: i.gst_percent })),
         ...packs.map(p => ({ type: 'pack' as const, id: p.id, name: `📦 ${p.name}`, price: p.total_selling_price, gst: 12 })),
     ].filter(p => p.name.toLowerCase().includes(productSearch.toLowerCase()) && !lineItems.find(li => li.id === p.id && li.type === p.type))
 
-    const filtered = quotations.filter(q => (q.hospital as any)?.name?.toLowerCase().includes(search.toLowerCase()))
+    const filtered = quotations.filter(q => (q.hospital as { name?: string })?.name?.toLowerCase().includes(search.toLowerCase()))
 
     return (
         <div className="space-y-5 fade-in">
@@ -221,7 +222,7 @@ export default function QuotationsPage() {
                             ) : filtered.map(q => (
                                 <TableRow key={q.id}>
                                     <TableCell className="font-mono text-xs text-slate-500">{q.id.slice(0, 8).toUpperCase()}</TableCell>
-                                    <TableCell className="font-medium">{(q.hospital as any)?.name || 'N/A'}</TableCell>
+                                    <TableCell className="font-medium">{(q.hospital as { name?: string })?.name || 'N/A'}</TableCell>
                                     <TableCell>{formatCurrency(q.subtotal)}</TableCell>
                                     <TableCell>{formatCurrency(q.gst_total)}</TableCell>
                                     <TableCell className="font-bold">{formatCurrency(q.grand_total)}</TableCell>
