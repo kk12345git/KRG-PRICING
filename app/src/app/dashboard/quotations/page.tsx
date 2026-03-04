@@ -179,7 +179,12 @@ export default function QuotationsPage() {
         ...packs.map(p => ({ type: 'pack' as const, id: p.id, name: `📦 ${p.name}`, price: p.total_selling_price, gst: 12 })),
     ].filter(p => p.name.toLowerCase().includes(productSearch.toLowerCase()) && !lineItems.find(li => li.id === p.id && li.type === p.type))
 
-    const filtered = quotations.filter(q => (q.hospital as { name?: string })?.name?.toLowerCase().includes(search.toLowerCase()))
+    const filtered = quotations.filter(q => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const h = (q as any).hospitals
+        const name = (Array.isArray(h) ? h[0]?.name : h?.name) || ''
+        return name.toLowerCase().includes(search.toLowerCase())
+    })
 
     return (
         <div className="space-y-5 fade-in">
@@ -222,7 +227,13 @@ export default function QuotationsPage() {
                             ) : filtered.map(q => (
                                 <TableRow key={q.id}>
                                     <TableCell className="font-mono text-xs text-slate-500">{q.id.slice(0, 8).toUpperCase()}</TableCell>
-                                    <TableCell className="font-medium">{(q.hospital as { name?: string })?.name || 'N/A'}</TableCell>
+                                    <TableCell className="font-medium">
+                                        {(() => {
+                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            const h = (q as any).hospitals
+                                            return (Array.isArray(h) ? h[0]?.name : h?.name) || 'N/A'
+                                        })()}
+                                    </TableCell>
                                     <TableCell>{formatCurrency(q.subtotal)}</TableCell>
                                     <TableCell>{formatCurrency(q.gst_total)}</TableCell>
                                     <TableCell className="font-bold">{formatCurrency(q.grand_total)}</TableCell>

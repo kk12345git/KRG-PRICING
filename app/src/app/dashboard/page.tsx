@@ -80,10 +80,16 @@ export default async function DashboardPage() {
                 <CardContent>
                     {recentQuotations && recentQuotations.length > 0 ? (
                         <div className="space-y-2">
-                            {recentQuotations.map((q: { id: string; status: string; created_at: string; grand_total: number; hospitals?: { name: string } | null }) => (
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {recentQuotations.map((q: any) => (
                                 <div key={q.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-slate-50">
                                     <div>
-                                        <p className="text-sm font-medium text-slate-700">{q.hospitals?.name || 'N/A'}</p>
+                                        <p className="text-sm font-medium text-slate-700">
+                                            {(() => {
+                                                const h = q.hospitals;
+                                                return (Array.isArray(h) ? h[0]?.name : h?.name) || 'N/A';
+                                            })()}
+                                        </p>
                                         <p className="text-xs text-slate-400">{new Date(q.created_at).toLocaleDateString('en-IN')}</p>
                                     </div>
                                     <div className="flex items-center gap-3">
