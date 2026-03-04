@@ -43,9 +43,8 @@ export default function ReportsPage() {
 
             setLoading(false)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         load()
-    }, [])
+    }, [supabase])
 
     if (loading) return <div className="text-center py-20 text-slate-400">Loading reports...</div>
 

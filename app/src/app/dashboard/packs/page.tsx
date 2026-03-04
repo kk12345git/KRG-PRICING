@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Pack, Item } from '@/types'
+import { Pack, Item, PackItem } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -54,7 +54,7 @@ export default function PacksPage() {
         setEditPack(pack)
         setName(pack.name)
         setDescription(pack.description || '')
-        const pis = (pack.pack_items || []).filter((pi: { item?: Item }) => pi.item).map((pi: { item: Item, quantity: number }) => ({ item: pi.item, quantity: pi.quantity }))
+        const pis = (pack.pack_items || []).filter((pi): pi is PackItem & { item: Item } => !!pi.item).map(pi => ({ item: pi.item, quantity: pi.quantity }))
         setPackItems(pis)
         setOpen(true)
     }
@@ -63,7 +63,7 @@ export default function PacksPage() {
         setEditPack(null)
         setName(pack.name + ' (Copy)')
         setDescription(pack.description || '')
-        const pis = (pack.pack_items || []).filter((pi: { item?: Item }) => pi.item).map((pi: { item: Item, quantity: number }) => ({ item: pi.item, quantity: pi.quantity }))
+        const pis = (pack.pack_items || []).filter((pi): pi is PackItem & { item: Item } => !!pi.item).map(pi => ({ item: pi.item, quantity: pi.quantity }))
         setPackItems(pis)
         setOpen(true)
     }
